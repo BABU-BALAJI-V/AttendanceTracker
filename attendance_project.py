@@ -4,20 +4,20 @@ import face_recognition
 import os
 from datetime import datetime
 
-path = 'Timg'
+path = 'Timg' #Training image
 images = []
 classNames = []
 myList = os.listdir(path)
 print(myList)
 
-for i in myList:
+for i in myList: #Images into array
     curImg = cv2.imread(f'{path}/{i}')
     images.append(curImg)
     classNames.append(os.path.splitext(i)[0])
 print(classNames)
 
 
-def findEncodings(images):
+def findEncodings(images): #To derive encodiings from the array
     encodeList = []
     for img in images:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -26,7 +26,7 @@ def findEncodings(images):
     return encodeList
 
 
-def markAttendance(name):
+def markAttendance(name): #Marking attendance in csv
     with open('attendance.csv', 'r+') as f:
         myDataList = f.readlines()
         nameList = []
@@ -39,13 +39,13 @@ def markAttendance(name):
             f.writelines(f'\n{name},{dtString}')
 
 
-encodeListKnown = findEncodings(images)
+encodeListKnown = findEncodings(images) #Calling the findencodings function
 print("encoding complete")
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0) #Accessing the video cam
 
-while True:
-    success, img = cap.read()
-    imgS = cv2.resize(img, (0, 0), None, 0.25, 0.25)
+while True: 
+    img = cap.read()
+    imgS = cv2.resize(img, (0, 0), None, 0.25, 0.25) #Normalizing the image size
     imgS = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     facesCurFrame = face_recognition.face_locations(imgS)
     encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
